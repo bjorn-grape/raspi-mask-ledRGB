@@ -11,6 +11,7 @@ BLACK = Color(0,0,0)
 RED = Color(255,0,0)
 GREEN = Color(0,255,0)
 BLUE = Color(0,0,255)
+WHITE = Color(255,255,255)
 
 class Rectangle():
     def __init__(self, origin_x, origin_y, width, height):
@@ -53,13 +54,13 @@ class LedStrip():
         raspi_pin = 18 # GPIO pin connected to the pixels (18 uses PWM!).
         led_freq_hz = 800000  # LED signal frequency in hertz (usually 800khz)
         led_dma = 10      # DMA channel to use for generating signal (try 10)
-        led_brightness = int(brightness * 255.0)      # Set to 0 for darkest and 255 for brightest
+        led_brightness = int(brightness)      # Set to 0 for darkest and 255 for brightest
         led_invert = False   # True to invert the signal (when using NPN transistor level shift)
         led_channel = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
         self.strip = Adafruit_NeoPixel(self.led_count, raspi_pin, led_freq_hz, led_dma, led_invert, led_brightness, led_channel)
         self.strip.begin()
         
-    def display_image(formatted_img):
+    def display_image(self, formatted_img):
         for i in range(self.height):
             for j in range(self.width):
                 position = self.disposition[i,j]
@@ -69,22 +70,25 @@ class LedStrip():
         self.show()
         
 
-    def clear(col = BLACK):
+    def clear(self, col = BLACK):
         for i in range(self.led_count):
             self.strip.setPixelColor(i, col)
         self.show()
     
-    def show():
+    def show(self):
         self.strip.show()
     
 def main_func(led_strip):
     led_strip.clear(RED)
-    time.sleep(1000.0)
+    time.sleep(.1)
     led_strip.clear(GREEN)
-    time.sleep(1000.0)
+    time.sleep(.1)
     led_strip.clear(BLUE)
-    time.sleep(1000.0)
+    time.sleep(.1)
+    led_strip.clear(WHITE)
+    time.sleep(2.0)
     
+
 if __name__ == '__main__':
     # Process arguments
     parser = argparse.ArgumentParser()
