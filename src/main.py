@@ -6,6 +6,7 @@ from neopixel import *
 import argparse
 import pandas as pd
 import numpy as np
+from loader import ImageLoader
 
 BLACK = Color(0,0,0)
 RED = Color(255,0,0)
@@ -78,7 +79,12 @@ class LedStrip():
     def show(self):
         self.strip.show()
     
-def main_func(led_strip):
+def make_loader(ROI):
+    loader = ImageLoader()
+    loader.load("test","../images/test.png")
+    return loader
+    
+def main_func(led_strip, loader):
     led_strip.clear(RED)
     time.sleep(.1)
     led_strip.clear(GREEN)
@@ -86,6 +92,8 @@ def main_func(led_strip):
     led_strip.clear(BLUE)
     time.sleep(.1)
     led_strip.clear(WHITE)
+    time.sleep(2.0)
+    led_strip.display_image(loader.get("test"))
     time.sleep(2.0)
     
 
@@ -98,6 +106,7 @@ if __name__ == '__main__':
     print ('Initialization...')
     
     rec = Rectangle(0,0,17, 37)
+    loader = make_loader(rec)
     maskdisp = MaskDisposition("../mapping/mask_mapping.xlsx", rec)
     strip = LedStrip(maskdisp, 1.0)
     
@@ -110,7 +119,7 @@ if __name__ == '__main__':
         strip.clear()
         print ('Entering main loop...')
         while True:
-            main_func(strip)
+            main_func(strip, loader)
 
     except KeyboardInterrupt:
         if args.clear:
